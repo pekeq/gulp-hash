@@ -2,7 +2,7 @@
 
 const through = require('through2');
 const PluginError = require('plugin-error');
-const File = require('Vinyl');
+const File = require('vinyl');
 const objectPath = require('object-path');
 const { Crypto } = require('@peculiar/webcrypto');
 
