@@ -18,15 +18,25 @@ const Algorithm = {
 	SHA384: 'SHA-384',
 	SHA512: 'SHA-512',
 };
+/**
+ * @typedef {Object} Options
+ * @property {Algorithm} [algorithm=SHA-1]
+ * @property {string} [property=digest]
+ */
 
 /**
  *
- * @param {Algorithm} [algorithm=SHA-1]
+ * @param {Algorithm|Options} [algorithm]
  * @returns
  */
-function GulpHash(algorithm) {
-	if (typeof algorithm === 'undefined') {
-		algorithm = 'SHA-1';
+function GulpHash(algorithm = 'SHA-1') {
+	let property = 'digest';
+	if (typeof algorithm === 'object') {
+		({ algorithm, property } = {
+			algorithm: 'SHA-1',
+			property,
+			...algorithm,
+		});
 	}
 
 	/**
@@ -55,7 +65,7 @@ function GulpHash(algorithm) {
 		const hashBuffer = await crypto.subtle.digest(algorithm, file.contents);
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
 		const digest = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-		objectPath.set(file, 'digest', digest);
+		objectPath.set(file, property, digest);
 
 		callback(null, file);
 	}

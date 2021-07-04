@@ -27,16 +27,19 @@ exports.default = function() {
 
 #### Parameters
 
-- algorithm
+- `algorithm`: Hash algorithm
   Supported values are:
   - `SHA-1` (default)
   - `SHA-256`
   - `SHA-384`
   - `SHA-512`
 
-## TODO
+### hash({algorithm, property})
 
-- choice property name (like gulp-front-matter)
+#### Parameters
+
+- `algorithm`: Hash algorithm (default: `SHA-1`)
+- `property`: Custom property name (default: `digest`)
 
 ## License
 

@@ -56,3 +56,35 @@ test('sha512', (t) => {
 		});
 	});
 });
+
+test('with property object', (t) => {
+	return new Promise((resolve) => {
+		const stream = hash({ property: 'theDigest' });
+		stream.write(
+			new File({
+				contents: Buffer.from(testString),
+			})
+		);
+		stream.once('data', (file) => {
+			t.truthy(file.isBuffer());
+			t.is(file.theDigest, testSha1);
+			resolve();
+		});
+	});
+});
+
+test('empty property object', (t) => {
+	return new Promise((resolve) => {
+		const stream = hash({});
+		stream.write(
+			new File({
+				contents: Buffer.from(testString),
+			})
+		);
+		stream.once('data', (file) => {
+			t.truthy(file.isBuffer());
+			t.is(file.digest, testSha1);
+			resolve();
+		});
+	});
+});
