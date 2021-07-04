@@ -1,17 +1,17 @@
 export = GulpHash;
 /**
- * @typedef {Object} Options
+ * @typedef {Object} GulpHashOptions
  * @property {Algorithm} [algorithm=SHA-1]
  * @property {string} [property=digest]
  */
 /**
  *
- * @param {Algorithm|Options} [algorithm]
- * @returns
+ * @param {Algorithm|GulpHashOptions} [algorithm]
+ * @returns {NodeJS.ReadWriteStream}
  */
-declare function GulpHash(algorithm?: Algorithm | Options): any;
+declare function GulpHash(algorithm?: Algorithm | GulpHashOptions): NodeJS.ReadWriteStream;
 declare namespace GulpHash {
-    export { Algorithm, Options };
+    export { Algorithm, GulpHashOptions };
 }
 /**
  * *
@@ -23,7 +23,7 @@ declare namespace Algorithm {
     const SHA384: string;
     const SHA512: string;
 }
-type Options = {
+type GulpHashOptions = {
     algorithm?: Algorithm;
     property?: string;
 };

@@ -19,15 +19,15 @@ const Algorithm = {
 	SHA512: 'SHA-512',
 };
 /**
- * @typedef {Object} Options
+ * @typedef {Object} GulpHashOptions
  * @property {Algorithm} [algorithm=SHA-1]
  * @property {string} [property=digest]
  */
 
 /**
  *
- * @param {Algorithm|Options} [algorithm]
- * @returns
+ * @param {Algorithm|GulpHashOptions} [algorithm]
+ * @returns {NodeJS.ReadWriteStream}
  */
 function GulpHash(algorithm = 'SHA-1') {
 	let property = 'digest';
@@ -43,7 +43,6 @@ function GulpHash(algorithm = 'SHA-1') {
 	 * @param {File} file
 	 * @param {BufferEncoding} enc
 	 * @param {through.TransformCallback} callback
-	 * @returns
 	 */
 	async function digestFile(file, enc, callback) {
 		if (file.isNull()) {

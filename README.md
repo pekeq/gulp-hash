@@ -10,7 +10,7 @@ Generate a digest of contents and add to file object property.
 
 ## Usage
 
-```
+```js
 const { src } = require('gulp');
 const hash = require('gulp-hash');
 
