@@ -5,6 +5,9 @@ export = GulpHash;
  * @returns
  */
 declare function GulpHash(algorithm?: Algorithm): any;
+declare namespace GulpHash {
+    export { Algorithm };
+}
 /**
  * *
  */

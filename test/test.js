@@ -7,6 +7,23 @@ const testSha1 = '8184b61afcaf05dbc2a4c3e7bd618d7e36b9c3ca';
 const testSha512 =
 	'6cf602fa4792c159bf1e06828dfa6a38e152453f39628cc22f3c53e67d23ccdf2ec31293ea1bfa06374b7f421c90c55864f6cd42cb88cb1c931c1a50d44e364f';
 
+test('default', (t) => {
+	return new Promise((resolve) => {
+		const stream = hash();
+		stream.write(
+			new File({
+				contents: Buffer.from(testString),
+			})
+		);
+		stream.once('data', (file) => {
+			t.truthy(file.isBuffer());
+			t.is(file.digest, testSha1);
+			t.truthy(File.isCustomProp('digest'));
+			resolve();
+		});
+	});
+});
+
 test('sha1', (t) => {
 	return new Promise((resolve) => {
 		const stream = hash('SHA-1');
@@ -17,8 +34,8 @@ test('sha1', (t) => {
 		);
 		stream.once('data', (file) => {
 			t.truthy(file.isBuffer());
-			t.is(file.hash, testSha1);
-			t.truthy(File.isCustomProp('hash'));
+			t.is(file.digest, testSha1);
+			t.truthy(File.isCustomProp('digest'));
 			resolve();
 		});
 	});
@@ -34,7 +51,7 @@ test('sha512', (t) => {
 		);
 		stream.once('data', (file) => {
 			t.truthy(file.isBuffer());
-			t.is(file.hash, testSha512);
+			t.is(file.digest, testSha512);
 			resolve();
 		});
 	});

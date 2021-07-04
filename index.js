@@ -54,8 +54,8 @@ function GulpHash(algorithm) {
 		// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
 		const hashBuffer = await crypto.subtle.digest(algorithm, file.contents);
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
-		const hash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-		objectPath.set(file, 'hash', hash);
+		const digest = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+		objectPath.set(file, 'digest', digest);
 
 		callback(null, file);
 	}
