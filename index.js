@@ -2,7 +2,7 @@
 
 const through = require('through2');
 const PluginError = require('plugin-error');
-const File = require('vinyl');
+const File = require('vinyl'); // eslint-disable-line no-unused-vars
 const objectPath = require('object-path');
 const { Crypto } = require('@peculiar/webcrypto');
 
@@ -40,12 +40,14 @@ function GulpHash(algorithm) {
 			callback(null, file);
 			return;
 		}
+
 		if (file.isStream()) {
-			cb(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
+			callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
 			return;
 		}
+
 		if (!file.isBuffer()) {
-			cb(new PluginError(PLUGIN_NAME, 'Only Buffer is supported'));
+			callback(new PluginError(PLUGIN_NAME, 'Only Buffer is supported'));
 			return;
 		}
 
@@ -61,4 +63,5 @@ function GulpHash(algorithm) {
 	return through.obj(digestFile);
 }
 
+module.exports.Algorithm = Algorithm;
 module.exports = GulpHash;
