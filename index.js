@@ -1,26 +1,25 @@
 'use strict';
 
+const crypto = require('crypto');
 const through = require('through2');
-const PluginError = require('plugin-error');
-const File = require('vinyl'); // eslint-disable-line no-unused-vars
 const objectPath = require('object-path');
-const { Crypto } = require('@peculiar/webcrypto');
 
-const PLUGIN_NAME = 'gulp-hash';
-const crypto = new Crypto();
-
+/**
+ * @typedef {import('vinyl').BufferFile} File
+ */
 /**
  * @enum {string}
  * */
 const Algorithm = {
-	SHA1: 'SHA-1',
-	SHA256: 'SHA-256',
-	SHA384: 'SHA-384',
-	SHA512: 'SHA-512',
+	MD5: 'md5',
+	SHA1: 'sha1',
+	SHA256: 'sha256',
+	SHA384: 'sha384',
+	SHA512: 'sha512',
 };
 /**
  * @typedef {Object} GulpHashOptions
- * @property {Algorithm} [algorithm=SHA-1]
+ * @property {Algorithm} [algorithm=sha1]
  * @property {string} [property=digest]
  */
 
@@ -29,11 +28,11 @@ const Algorithm = {
  * @param {Algorithm|GulpHashOptions} [algorithm]
  * @returns {NodeJS.ReadWriteStream}
  */
-function GulpHash(algorithm = 'SHA-1') {
+function GulpHash(algorithm = 'sha1') {
 	let property = 'digest';
 	if (typeof algorithm === 'object') {
 		({ algorithm, property } = {
-			algorithm: 'SHA-1',
+			algorithm: 'sha1',
 			property,
 			...algorithm,
 		});
@@ -50,27 +49,28 @@ function GulpHash(algorithm = 'SHA-1') {
 			return;
 		}
 
+		const hash = crypto.createHash(algorithm);
+
 		if (file.isStream()) {
-			callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-			return;
+			file.contents.on('data', (chunk) => {
+				if (chunk.length > 0) {
+					hash.update(chunk);
+				}
+			});
+			file.contents.on('end', () => {
+				objectPath.set(file, property, hash.digest('hex'));
+				callback(null, file);
+			});
+		} else {
+			// Is Buffer
+			hash.update(file.contents);
+			objectPath.set(file, property, hash.digest('hex'));
+			callback(null, file);
 		}
-
-		if (!file.isBuffer()) {
-			callback(new PluginError(PLUGIN_NAME, 'Only Buffer is supported'));
-			return;
-		}
-
-		// https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#converting_a_digest_to_a_hex_string
-		const hashBuffer = await crypto.subtle.digest(algorithm, file.contents);
-		const hashArray = Array.from(new Uint8Array(hashBuffer));
-		const digest = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-		objectPath.set(file, property, digest);
-
-		callback(null, file);
 	}
 
 	return through.obj(digestFile);
 }
 
-module.exports.Algorithm = Algorithm;
+GulpHash.Algorithm = Algorithm;
 module.exports = GulpHash;
