@@ -16,7 +16,7 @@ const hash = require('gulp-hash');
 
 exports.default = function() {
   return src('src/images/**')
-    .pipe(hash()) // default=SHA-1
+    .pipe(hash()) // default: sha1
     .pipe(...)
 }
 ```
@@ -29,16 +29,17 @@ exports.default = function() {
 
 - `algorithm`: Hash algorithm
   Supported values are:
-  - `SHA-1` (default)
-  - `SHA-256`
-  - `SHA-384`
-  - `SHA-512`
+  - `md5`
+  - `sha1` (default)
+  - `sha256`
+  - `sha384`
+  - `sha512`
 
 ### hash({algorithm, property})
 
 #### Parameters
 
-- `algorithm`: Hash algorithm (default: `SHA-1`)
+- `algorithm`: Hash algorithm (default: `sha1`)
 - `property`: Custom property name (default: `digest`)
 
 ## License
