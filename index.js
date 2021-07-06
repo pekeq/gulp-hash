@@ -43,7 +43,7 @@ function GulpHash(algorithm = 'sha1') {
 	 * @param {BufferEncoding} enc
 	 * @param {through.TransformCallback} callback
 	 */
-	async function digestFile(file, enc, callback) {
+	function digestFile(file, enc, callback) {
 		if (file.isNull()) {
 			callback(null, file);
 			return;
